@@ -1,14 +1,12 @@
 import streamlit as st
 from auth import login, register
 from chat import ollama_chat
-from config import init_config, init_db_schema
+from config import init_config
 
 init_config()
 
 def main():
     # 確保資料庫有正確的資料表
-    init_db_schema()
-
     if "user" in st.session_state:
         ollama_chat() 
     else:
