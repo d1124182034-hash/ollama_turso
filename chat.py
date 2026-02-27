@@ -95,7 +95,7 @@ def ollama_chat():
 
     # --- Sidebar ---
     with st.sidebar:
-        st.success(f"帳號：{username}")
+        st.success(f"登入帳號：{username}")
 
         models = get_cloud_models(api_key)
         selected_model = (
