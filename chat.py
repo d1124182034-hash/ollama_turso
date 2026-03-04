@@ -98,7 +98,7 @@ def ollama_chat():
             <div style='text-align: center; padding-top: 80px;'>
                 <h2 style='color: #DCDCDC; margin-bottom: 10px;'>💬 開始聊天</h2>
                 <p style='color: #888; font-size: 1.1rem; margin-bottom: 15px;'>
-                    在下方輸入框提問，或點擊 <b>📎</b> 上傳文件
+                    在下方輸入框提問，或點擊 <b>+</b> 上傳文件
                 </p>
                 <div style='display: flex; justify-content: center;'>
                     <span style='
