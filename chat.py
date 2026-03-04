@@ -107,7 +107,7 @@ def ollama_chat():
             st.rerun()
 
     # --- 右側主對話內容區 ---
-   if not st.session_state["messages"]:
+    if not st.session_state["messages"]:
         # 畫面空白時的歡迎區塊與中央的文字提示
         st.markdown(
             "<div style='text-align: center; padding-top: 100px; color: #888;'>"
