@@ -1,10 +1,9 @@
 import streamlit as st
 from config import get_db_conn
-import hashlib
 
-def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
-
+# ==========================================
+# 1. 登入功能模組 (使用 st.form)
+# ==========================================
 def login():
     with st.form("login_form"):
         # 補上 placeholder
@@ -13,9 +12,10 @@ def login():
         
         # 補上 use_container_width=True 讓按鈕變長
         submitted = st.form_submit_button("登入", use_container_width=True)
+        
     if submitted:
         if not username or not password:
-            st.error("⚠️ 請輸入帳號與密碼") # 改為 error 更顯眼
+            st.error("⚠️ 請輸入帳號與密碼") 
             return
 
         conn = get_db_conn()
@@ -24,7 +24,8 @@ def login():
                 result = conn.execute("SELECT password FROM users WHERE username = ?", (username,))
                 user_row = result.fetchone()
                 
-                if user_row and user_row[0] == hash_password(password):
+                # 直接比對明文密碼
+                if user_row and user_row[0] == password:
                     st.session_state["user"] = username
                     st.success(f"歡迎回來，{username}！")
                     st.rerun()
@@ -35,9 +36,11 @@ def login():
         finally:
             conn.close()
 
+# ==========================================
+# 2. 註冊功能模組 (使用 st.form)
+# ==========================================
 def register():
-    # 同樣移除 st.header
-    
+    # clear_on_submit=True 可以在註冊成功後自動清空輸入框
     with st.form("register_form", clear_on_submit=True):
         new_user = st.text_input("新帳號", placeholder="設定您的帳號")
         new_pass = st.text_input("新密碼", type="password", placeholder="設定您的密碼")
@@ -64,7 +67,7 @@ def register():
                 else:
                     conn.execute(
                         "INSERT INTO users (username, password) VALUES (?, ?)", 
-                        (new_user, hash_password(new_pass))
+                        (new_user, new_pass) # 直接存入明文密碼
                     )
                     conn.commit() 
                     st.success("✅ 註冊成功！請切換至「帳號登入」頁面")
