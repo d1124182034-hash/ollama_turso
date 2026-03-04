@@ -19,11 +19,7 @@ def main():
         
         # 登入後彈出動態小提示，引導使用者注意左上角
         if "sidebar_hint_shown" not in st.session_state:
-            st.toast('💡 點擊左上角展開側邊欄，可選擇模型喔！', icon='👈')
-            st.session_state["sidebar_hint_shown"] = True
-            
-        # 呼叫您的聊天主程式
-        ollama_chat() 
+            ollama_chat() 
         
     else:
         # 🚨 這裡把剛剛做好的完美排版放回來
