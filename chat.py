@@ -107,16 +107,21 @@ def ollama_chat():
             st.rerun()
 
     # --- 右側主對話內容區 ---
-    if not st.session_state["messages"]:
+   if not st.session_state["messages"]:
         # 畫面空白時的歡迎區塊與中央的文字提示
         st.markdown(
-    "<div style='text-align: center; padding-top: 100px; color: #888;'>"
-    "<h3>💬 開始聊天</h3>"
-    "<p>在下方輸入框提問，或點擊 + 上傳文件</p>"
-    "<br>"
-    "</div>", 
-    unsafe_allow_html=True
-)
+            "<div style='text-align: center; padding-top: 100px; color: #888;'>"
+            "<h3>💬 開始聊天</h3>"
+            "<p>在下方輸入框提問，或點擊 📎 上傳文件</p>"
+            "<br>"
+            "<div style='background-color: #1E1E1E; padding: 12px 20px; border-radius: 8px; display: inline-block; border: 1px solid #333;'>"
+            "<span style='color: #CCCCCC; font-size: 14px;'>"
+            "💡 <b>左上角的展開側邊欄，可選擇 AI 模型喔！"
+            "</span>"
+            "</div>"
+            "</div>", 
+            unsafe_allow_html=True
+        )
     else:
         for msg in st.session_state["messages"]:
             if msg["role"] != "system":
