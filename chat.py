@@ -112,7 +112,7 @@ def ollama_chat():
         st.markdown(
     "<div style='text-align: center; padding-top: 100px; color: #888;'>"
     "<h3>💬 開始聊天</h3>"
-    "<p>在下方輸入框提問，或點擊 📎 上傳文件</p>"
+    "<p>在下方輸入框提問，或點擊 + 上傳文件</p>"
     "<br>"
     "</div>", 
     unsafe_allow_html=True
