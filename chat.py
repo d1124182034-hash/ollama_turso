@@ -1,5 +1,5 @@
 import streamlit as st
-import uuid  # 💡 新增：用來產生獨一無二的 session_id
+import uuid
 from ollama import Client
 from config import OLLAMA_API_KEY
 from models import get_cloud_models
@@ -50,7 +50,6 @@ def ollama_chat():
 
     username = st.session_state["user"]
 
-    # 💡 狀態初始化：如果沒有 current_session_id，就配發一個新的
     if "current_session_id" not in st.session_state:
         st.session_state["current_session_id"] = str(uuid.uuid4())
         st.session_state["messages"] = []
@@ -60,36 +59,36 @@ def ollama_chat():
 
     curr_session = st.session_state["current_session_id"]
 
-    # D. 左側 Sidebar
     with st.sidebar:
         models = get_cloud_models(OLLAMA_API_KEY)
         selected_model = st.selectbox("選擇模型", models, key="model_select") if models else "llama3"
         
         st.divider()
 
-        # 💡 將「清空對話」改為「新增對話」
         if st.button("➕ 新增對話", use_container_width=True):
-            st.session_state["current_session_id"] = str(uuid.uuid4()) # 換新 ID
-            st.session_state["messages"] = []                          # 清空畫面
+            st.session_state["current_session_id"] = str(uuid.uuid4()) 
+            st.session_state["messages"] = []                          
             st.session_state["uploaded_text"] = ""
             st.session_state["last_uploaded_file"] = None
             st.rerun()
         
         st.markdown("### 📜 歷史紀錄")
         
-        # 💡 讀取並顯示對話群組列表
         sessions = get_user_sessions(username)
         if sessions:
             with st.container(height=350):
                 for sess in sessions:
-                    # 判斷是不是目前正在看的對話，加個小箭頭提示
                     is_current = (sess["session_id"] == st.session_state["current_session_id"])
                     btn_icon = "👉" if is_current else "💬"
                     
                     if st.button(f"{btn_icon} {sess['title']}", key=sess["session_id"], use_container_width=True):
-                        # 點擊後切換對話
                         st.session_state["current_session_id"] = sess["session_id"]
                         st.session_state["messages"] = load_history(username, sess["session_id"])
+                        
+                        # 🌟 修復 1：切換對話時，確保清除上一場對話的「文件記憶」
+                        st.session_state["uploaded_text"] = ""
+                        st.session_state["last_uploaded_file"] = None
+                        
                         st.rerun()
         else:
             st.caption("尚無對話紀錄")
@@ -99,12 +98,10 @@ def ollama_chat():
             st.session_state.clear()
             st.rerun()
 
-    # E. 右側主對話內容區
     for msg in st.session_state["messages"]:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-    # F. 歡迎畫面
     if not st.session_state["messages"]:
         st.markdown(
             """
@@ -120,7 +117,6 @@ def ollama_chat():
             """, unsafe_allow_html=True
         )
 
-    # G. 聊天輸入框
     prompt = st.chat_input("在此輸入訊息或上傳文件...", accept_file=True, file_type=["txt", "csv", "md"])
 
     if prompt:
@@ -131,7 +127,6 @@ def ollama_chat():
                 user_msg = f"📎 上傳文件：**{uploaded_file.name}**"
                 
                 st.session_state["messages"].append({"role": "user", "content": user_msg})
-                # 💡 加入 curr_session 存檔
                 save_message(username, curr_session, selected_model, "user", user_msg)
                 
                 with st.chat_message("user"):
@@ -153,13 +148,17 @@ def ollama_chat():
             with st.chat_message("assistant"):
                 resp_placeholder = st.empty()
                 full_resp = ""
-                full_prompt = user_message
+                
+                # 🌟 修復 2：將「所有」對話紀錄打包，讓 AI 擁有完整記憶
+                api_messages = [{"role": m["role"], "content": m["content"]} for m in st.session_state["messages"]]
+                
                 if st.session_state.get("uploaded_text"):
-                    full_prompt = f"文件背景：\n{st.session_state['uploaded_text']}\n\n問題：{user_message}"
+                    # 如果有文件，偷偷塞在最後一句話給 AI 參考
+                    api_messages[-1]["content"] = f"文件背景：\n{st.session_state['uploaded_text']}\n\n問題：{user_message}"
                 
                 try:
                     client = Client(host="https://ollama.com", headers={"Authorization": f"Bearer {OLLAMA_API_KEY}"})
-                    stream_response = client.chat(model=selected_model, messages=[{"role": "user", "content": full_prompt}], stream=True)
+                    stream_response = client.chat(model=selected_model, messages=api_messages, stream=True)
                     for part in stream_response:
                         full_resp += part["message"]["content"]
                         resp_placeholder.markdown(full_resp + "▌")
