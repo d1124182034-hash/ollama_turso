@@ -32,8 +32,6 @@ def stream_file_summary(file_content, selected_model, api_key, filename):
 
 # --- 2. 主程式 ---
 def ollama_chat():
-    st.set_page_config(page_title="Ollama Cloud", layout="centered")
-
     st.markdown("""
         <style>
         [data-testid="stChatMessage"], .stChatInput, [data-testid="stNotification"], .stAlert { 
