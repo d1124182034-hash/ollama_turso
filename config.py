@@ -6,7 +6,7 @@ def init_config():
         page_title="Ollama Cloud",
         page_icon="☁️",
         initial_sidebar_state="expanded",
-        layout="wide"
+        layout="centered"
     )
 
 # -------------------------
