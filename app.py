@@ -2,17 +2,11 @@ import streamlit as st
 from auth import login, register
 from chat import ollama_chat
 from config import init_config
-from history import init_history_db  # 👈 新增引入
+from history import init_history_db
 
-st.set_page_config(
-    page_title="Ollama Cloud", 
-    page_icon="☁️",
-    initial_sidebar_state="expanded",
-    layout="centered" 
-)
-
+# 刪掉這裡的 st.set_page_config，改由 init_config() 統一管理
 init_config()
-init_history_db()  # 👈 在這裡呼叫，確保啟動時建立資料表
+init_history_db()
 
 def main():
     if "user" in st.session_state:
