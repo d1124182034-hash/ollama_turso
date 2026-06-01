@@ -13,7 +13,7 @@ def main():
         if "sidebar_hint_shown" not in st.session_state:
             ollama_chat() 
     else:
-        col1, col2, col3 = st.columns([1.2, 2.5, 1.2]) 
+        col1, col2, col3 = st.columns([1, 1.5, 1])   
         with col2:
             st.title("Ollama Cloud")
             st.markdown("##### 歡迎回來請先登入您的帳號")
