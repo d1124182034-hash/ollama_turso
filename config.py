@@ -2,11 +2,11 @@ import streamlit as st
 import libsql  # 用於 Turso
 
 def init_config():
-    """初始化頁面基礎設定"""
     st.set_page_config(
-        page_title="LLM Cloud Chat",
+        page_title="Ollama Cloud",
         page_icon="☁️",
-        layout="centered",             
+        initial_sidebar_state="expanded",
+        layout="wide"
     )
 
 # -------------------------
