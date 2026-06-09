@@ -2,21 +2,24 @@ import streamlit as st
 from auth import login, register
 from chat import ollama_chat
 from config import init_config
-from history import init_history_db
+from history import init_history_db  # 👈 新增引入
 
-# 刪掉這裡的 st.set_page_config，改由 init_config() 統一管理
+st.set_page_config(
+    page_title="Ollama Cloud", 
+    page_icon="☁️",
+    initial_sidebar_state="expanded",
+    layout="wide" 
+)
+
 init_config()
-init_history_db()
+init_history_db()  # 👈 在這裡呼叫，確保啟動時建立資料表
 
 def main():
-    # 1. 檢查使用者是否登入
     if "user" in st.session_state:
-        #  登入了，才當場載入並執行聊天室，絕對不會誤觸
-        from chat import ollama_chat
-        ollama_chat()
+        if "sidebar_hint_shown" not in st.session_state:
+            ollama_chat() 
     else:
-        # ❌ 沒登入，只會乖乖待在這裡畫表單，絕對不允許任何人執行 st.rerun()
-        col1, col2, col3 = st.columns([1, 1.5, 1])   
+        col1, col2, col3 = st.columns([1.2, 2.5, 1.2]) 
         with col2:
             st.title("Ollama Cloud")
             st.markdown("##### 歡迎回來請先登入您的帳號")
