@@ -8,26 +8,26 @@ def login():
         submitted = st.form_submit_button("登入", use_container_width=True)
         
     if submitted:
+        #  改用 if-else 控制流程，絕對不要寫 return
         if not username or not password:
             st.error("⚠️ 請輸入帳號與密碼") 
-            return
-
-        conn = get_db_conn()
-        try:
-            with st.spinner("驗證中..."):
-                result = conn.execute("SELECT password FROM users WHERE username = ?", (username,))
-                user_row = result.fetchone()
-                
-                if user_row and user_row[0] == password:
-                    st.session_state["user"] = username
-                    st.success(f"歡迎回來，{username}！")
-                    st.rerun()
-                else:
-                    st.error("❌ 帳號或密碼錯誤")
-        except Exception as e:
-            st.error(f"系統連線錯誤 ({e})")
-        finally:
-            conn.close()
+        else:
+            conn = get_db_conn()
+            try:
+                with st.spinner("驗證中..."):
+                    result = conn.execute("SELECT password FROM users WHERE username = ?", (username,))
+                    user_row = result.fetchone()
+                    
+                    if user_row and user_row[0] == password:
+                        st.session_state["user"] = username
+                        st.success(f"歡迎回來，{username}！")
+                        st.rerun()
+                    else:
+                        st.error("❌ 帳號或密碼錯誤")
+            except Exception as e:
+                st.error(f"系統連線錯誤 ({e})")
+            finally:
+                conn.close()
 
 def register():
     with st.form("register_form", clear_on_submit=True):
