@@ -170,5 +170,4 @@ def ollama_chat():
         
         st.rerun()
 
-if __name__ == "__main__":
-    ollama_chat()
+
