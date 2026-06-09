@@ -22,10 +22,16 @@ def main():
             tab_login, tab_reg = st.tabs(["🔑 帳號登入", "🆕 註冊新帳號"])
             
             with tab_login:
-                login()
-                
+                # 🌟 建立一個空白容器，並把 login() 塞進去
+                login_container = st.empty()
+                with login_container:
+                    login()
+                    
             with tab_reg:
-                register()
+                # 🌟 建立一個空白容器，並把 register() 塞進去
+                reg_container = st.empty()
+                with reg_container:
+                    register()
 
 if __name__ == "__main__":
     main()
