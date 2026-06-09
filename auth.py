@@ -2,13 +2,17 @@ import streamlit as st
 from config import get_db_conn
 
 def login():
-    with st.form("login_form"):
-        username = st.text_input("帳號", placeholder="請輸入您的帳號")
-        password = st.text_input("密碼", type="password", placeholder="請輸入您的密碼")
-        submitted = st.form_submit_button("登入", use_container_width=True)
+    # 🎯 建立一個空容器（盾牌），用來裝完整的表單
+    login_area = st.empty()
+    
+    # 用 with 丟進容器裡，這樣裡面的元件會被「一口氣」同時渲染出來
+    with login_area.container():
+        with st.form("login_form"):
+            username = st.text_input("帳號", placeholder="請輸入您的帳號")
+            password = st.text_input("密碼", type="password", placeholder="請輸入您的密碼")
+            submitted = st.form_submit_button("登入", use_container_width=True)
         
     if submitted:
-        #  改用 if-else 控制流程，絕對不要寫 return
         if not username or not password:
             st.error("⚠️ 請輸入帳號與密碼") 
         else:
