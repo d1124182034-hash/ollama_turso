@@ -19,20 +19,12 @@ def main():
             st.markdown("##### 歡迎回來請先登入您的帳號")
             st.markdown("<br>", unsafe_allow_html=True) 
             
-            # 🌟 用分段控制鈕取代 st.tabs
-            mode = st.segmented_control(
-                "導覽",
-                options=["🔑 帳號登入", "🆕 註冊新帳號"],
-                default="🔑 帳號登入",
-                label_visibility="collapsed" # 隱藏上方預設的小標籤
-            )
+            tab_login, tab_reg = st.tabs(["🔑 帳號登入", "🆕 註冊新帳號"])
             
-            st.markdown("<br>", unsafe_allow_html=True)
-            
-            # 🌟 關鍵：用 if-else 讓系統一次只讀取、渲染其中一個表單
-            if mode == "🔑 帳號登入" or mode is None:
+            with tab_login:
                 login()
-            else:
+                
+            with tab_reg:
                 register()
 
 if __name__ == "__main__":
