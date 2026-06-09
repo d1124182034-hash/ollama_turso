@@ -19,19 +19,21 @@ def main():
             st.markdown("##### 歡迎回來請先登入您的帳號")
             st.markdown("<br>", unsafe_allow_html=True) 
             
-            tab_login, tab_reg = st.tabs(["🔑 帳號登入", "🆕 註冊新帳號"])
+            # 🌟 用分段控制鈕取代 st.tabs
+            mode = st.segmented_control(
+                "導覽",
+                options=["🔑 帳號登入", "🆕 註冊新帳號"],
+                default="🔑 帳號登入",
+                label_visibility="collapsed" # 隱藏上方預設的小標籤
+            )
             
-            with tab_login:
-                # 🌟 建立一個空白容器，並把 login() 塞進去
-                login_container = st.empty()
-                with login_container:
-                    login()
-                    
-            with tab_reg:
-                # 🌟 建立一個空白容器，並把 register() 塞進去
-                reg_container = st.empty()
-                with reg_container:
-                    register()
+            st.markdown("<br>", unsafe_allow_html=True)
+            
+            # 🌟 關鍵：用 if-else 讓系統一次只讀取、渲染其中一個表單
+            if mode == "🔑 帳號登入" or mode is None:
+                login()
+            else:
+                register()
 
 if __name__ == "__main__":
     main()
