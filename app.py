@@ -9,10 +9,13 @@ init_config()
 init_history_db()
 
 def main():
+    # 1. 檢查使用者是否登入
     if "user" in st.session_state:
-        if "sidebar_hint_shown" not in st.session_state:
-            ollama_chat() 
+        #  登入了，才當場載入並執行聊天室，絕對不會誤觸
+        from chat import ollama_chat
+        ollama_chat()
     else:
+        # ❌ 沒登入，只會乖乖待在這裡畫表單，絕對不允許任何人執行 st.rerun()
         col1, col2, col3 = st.columns([1, 1.5, 1])   
         with col2:
             st.title("Ollama Cloud")
