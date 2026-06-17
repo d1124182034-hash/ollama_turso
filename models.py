@@ -13,11 +13,11 @@ def get_cloud_models(api_key):
         # 精選模型
         keep_models = [
             "gpt-oss:20b",
-            "cogito-2.1:671b",
-            "glm-4.6",
+            "gemini-3-flash-preview",
+            "glm-4.7",
             "ministral-3:8b",
             "qwen3-coder:480b",
-            "minimax-m2"
+            "minimax-m2.7"
         ]
         return [m for m in keep_models if m in models]
 
